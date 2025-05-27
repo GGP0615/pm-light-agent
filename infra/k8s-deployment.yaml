@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: light-agent
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: light
+  template:
+    metadata:
+      labels:
+        app: light
+    spec:
+      containers:
+      - name: light-agent
+        image: gcr.io/${PROJECT_ID}/pm-light-agent:latest
+        env:
+        - name: SLACK_BOT_TOKEN
+          valueFrom:
+            secretKeyRef: {name: slack-secret, key: SLACK_BOT_TOKEN}
+        # (Other env refs...)
+        ports: [{containerPort: 3000}]
